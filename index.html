@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevPortfolio | Программист</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gray-light: #cbd5e1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            color: var(--light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px var(--primary); }
+            50% { box-shadow: 0 0 20px var(--primary), 0 0 30px rgba(99, 102, 241, 0.3); }
+        }
+
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            padding: 1.5rem 0;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            animation: slideInLeft 1s ease;
+            line-height: 1.2;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            color: var(--gray-light);
+            animation: slideInRight 1s ease;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+            animation: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--primary);
+            margin-left: 1rem;
+        }
+
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.1);
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            right: 5%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .shape:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            bottom: 10%;
+            right: 25%;
+            animation-delay: 4s;
+        }
+
+        section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-card {
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            animation: fadeIn 1s ease;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            animation: glow 2s infinite;
+        }
+
+        .skill-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .skill-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill-card p {
+            color: var(--gray-light);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            animation: glow 2s infinite;
+        }
+
+        .project-img {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .project-content {
+            padding: 1.5rem;
+        }
+
+        .project-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-content p {
+            color: var(--gray-light);
+            margin-bottom: 1rem;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-tag {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .comments-section {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .comment-form {
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--gray-light);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 8px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+        }
+
+        .comments-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .comment {
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .comment-date {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .comment-text {
+            color: var(--gray-light);
+        }
+
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .contact-info {
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .contact-info h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: var(--primary);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(15, 23, 42, 0.8);
+            border-top: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+        }
+        
+        .notification.success {
+            background: var(--secondary);
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background: #ef4444;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            section {
+                padding: 3rem 0;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">DevPortfolio</div>
+                <nav>
+                    <ul>
+                        <li><a href="#home">Главная</a></li>
+                        <li><a href="#skills">Навыки</a></li>
+                        <li><a href="#projects">Проекты</a></li>
+                        <li><a href="#comments">Отзывы</a></li>
+                        <li><a href="#contact">Контакты</a></li>
+                    </ul>
+                </nav>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <h1>Привет, я <span>Илья</span>,<br>Full-stack разработчик</h1>
+                <p>Создаю современные веб-приложения и цифровые решения. Специализируюсь на JavaScript, Python и облачных технологиях.</p>
+                <div>
+                    <a href="#projects" class="btn">Мои проекты</a>
+                    <a href="#contact" class="btn btn-secondary">Связаться</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills">
+        <div class="container">
+            <h2 class="section-title">Мои навыки</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <i class="fab fa-python"></i>
+                    </div>
+                    <h3>Python & Django</h3>
+                    <p>Разработка бэкенд-приложений, API, веб-скрапинг, анализ данных и машинное обучение. Опыт работы с Django, Flask, FastAPI.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <i class="fab fa-js-square"></i>
+                    </div>
+                    <h3>JavaScript & React</h3>
+                    <p>Создание интерактивных пользовательских интерфейсов. Опыт работы с React, Vue, Node.js и современными инструментами сборки.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>Базы данных</h3>
+                    <p>Проектирование и оптимизация реляционных и нереляционных БД. Опыт работы с PostgreSQL, MySQL, MongoDB и Redis.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h3>Облачные технологии</h3>
+                    <p>Развертывание и управление приложениями в облаке. Опыт работы с AWS, Docker, Kubernetes и CI/CD пайплайнами.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <div class="container">
+            <h2 class="section-title">Мои проекты</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-img">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3>Аналитическая платформа</h3>
+                        <p>Система для анализа больших объемов данных с интерактивной визуализацией и прогнозированием.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">Python</span>
+                            <span class="project-tag">Django</span>
+                            <span class="project-tag">React</span>
+                            <span class="project-tag">D3.js</span>
+                        </div>
+                        <a href="#" class="btn">Подробнее</a>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-img">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3>Умный чат-бот</h3>
+                        <p>AI-помощник для автоматизации поддержки клиентов с интеграцией в популярные мессенджеры.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">Python</span>
+                            <span class="project-tag">NLP</span>
+                            <span class="project-tag">Telegram API</span>
+                            <span class="project-tag">TensorFlow</span>
+                        </div>
+                        <a href="#" class="btn">Подробнее</a>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-img">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3>E-commerce платформа</h3>
+                        <p>Полнофункциональный маркетплейс с системой управления заказами, платежами и аналитикой.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">React</span>
+                            <span class="project-tag">Node.js</span>
+                            <span class="project-tag">MongoDB</span>
+                            <span class="project-tag">Stripe API</span>
+                        </div>
+                        <a href="#" class="btn">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="comments">
+        <div class="container">
+            <h2 class="section-title">Отзывы и комментарии</h2>
+            <div class="comments-section">
+                <div class="comment-form">
+                    <h3>Оставьте ваш отзыв</h3>
+                    <form id="commentForm">
+                        <div class="form-group">
+                            <label for="commentName">Ваше имя</label>
+                            <input type="text" id="commentName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="commentText">Ваш комментарий</label>
+                            <textarea id="commentText" name="text" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Отправить отзыв</button>
+                    </form>
+                </div>
+                <div class="comments-list" id="commentsList">
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container">
+            <h2 class="section-title">Связи</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>Контактная информация</h3>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                          
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <p>Телефон</p>
+                            <p>+375 29 884 58 37</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <p>Адрес</p>
+                            <p>брест</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <h3>Отправить сообщение</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Имя</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Сообщение</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Отправить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; сделал илья</p>
+        </div>
+    </footer>
+
+    <div id="notification" class="notification"></div>
+
+    <script>
+        document.querySelectorAll('nav a, .btn[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+  
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = `fadeIn 1s ease forwards`;
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.skill-card, .project-card').forEach(el => {
+            observer.observe(el);
+        });
+
+
+        let comments = JSON.parse(localStorage.getItem('portfolioComments')) || [];
+        
+        function displayComments() {
+            const commentsList = document.getElementById('commentsList');
+            commentsList.innerHTML = '';
+            
+            if (comments.length === 0) {
+                commentsList.innerHTML = '<p>Пока нет комментариев.</p>';
+                return;
+            }
+            
+            comments.forEach(comment => {
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment';
+                commentElement.innerHTML = `
+                    <div class="comment-header">
+                        <span class="comment-author">${comment.name}</span>
+                        <span class="comment-date">${new Date(comment.date).toLocaleDateString('ru-RU')}</span>
+                    </div>
+                    <div class="comment-text">${comment.text}</div>
+                `;
+                commentsList.appendChild(commentElement);
+            });
+        }
+        
+
+        document.getElementById('commentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const name = formData.get('name').trim();
+            const text = formData.get('text').trim();
+            
+            if (!name || !text) {
+                showNotification('Пожалуйста, заполните все поля', 'error');
+                return;
+            }
+            
+            const newComment = {
+                id: Date.now(),
+                name: name,
+                text: text,
+                date: new Date().toISOString()
+            };
+            
+            comments.unshift(newComment);
+            localStorage.setItem('portfolioComments', JSON.stringify(comments));
+            
+            displayComments();
+            this.reset();
+            showNotification('Ваш комментарий успешно добавлен!', 'success');
+        });
+        
+
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Отправка.';
+            submitBtn.disabled = true;
+            
+
+            setTimeout(() => {
+                showNotification('одийте ответа', 'success');
+                this.reset();
+                
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 1500);
+        });
+        
+
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification ' + type;
+            
+            setTimeout(() => {
+                notification.className = 'notification';
+            }, 5000);
+        }
+        
+
+        document.addEventListener('DOMContentLoaded', function() {
+            displayComments();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель | DevPortfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gray-light: #cbd5e1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            color: var(--light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            padding: 1.5rem 0;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .admin-nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .admin-nav a {
+            color: var(--light);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .admin-nav a:hover, .admin-nav a.active {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background: rgba(15, 23, 42, 0.7);
+            padding: 2rem 1rem;
+            border-right: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--gray-light);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+        }
+
+        .sidebar i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .section-title {
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .stat-label {
+            color: var(--gray-light);
+            font-size: 0.9rem;
+        }
+
+        .table-container {
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        th {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        td {
+            color: var(--gray-light);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--gray-light);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 6px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .message-unread {
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+        }
+        
+        .notification.success {
+            background: var(--secondary);
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background: #ef4444;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            gap: 0.75rem;
+        }
+
+        .skill-item, .project-item {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">DevPortfolio Admin</div>
+                <div class="admin-nav">
+                    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> На сайт</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="admin-container">
+        <div class="sidebar">
+            <ul>
+                <li><a href="#" class="active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="#" data-tab="messages"><i class="fas fa-envelope"></i> Сообщения <span id="unread-count" class="badge"></span></a></li>
+                <li><a href="#" data-tab="comments"><i class="fas fa-comments"></i> Комментарии</a></li>
+                <li><a href="#" data-tab="hero"><i class="fas fa-user"></i> Герой-секция</a></li>
+                <li><a href="#" data-tab="skills"><i class="fas fa-cogs"></i> Навыки</a></li>
+                <li><a href="#" data-tab="projects"><i class="fas fa-project-diagram"></i> Проекты</a></li>
+                <li><a href="#" data-tab="contact"><i class="fas fa-address-book"></i> Контакты</a></li>
+                <li><a href="#" data-tab="social"><i class="fas fa-share-alt"></i> Соцсети</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <!-- Дашборд -->
+            <div id="dashboard" class="tab-content active">
+                <h2 class="section-title">Дашборд</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="messages-count">0</div>
+                        <div class="stat-label">Сообщений</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="comments-count">0</div>
+                        <div class="stat-label">Комментариев</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="unread-count-dash">0</div>
+                        <div class="stat-label">Непрочитанных</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="skills-count">0</div>
+                        <div class="stat-label">Навыков</div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <h3>Последние сообщения</h3>
+                    <table id="recent-messages">
+                        <thead>
+                            <tr>
+                                <th>Имя</th>
+                                <th>Email</th>
+                                <th>Дата</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Сообщения будут загружаться здесь -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-container">
+                    <h3>Последние комментарии</h3>
+                    <table id="recent-comments">
+                        <thead>
+                            <tr>
+                                <th>Имя</th>
+                                <th>Комментарий</th>
+                                <th>Дата</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Комментарии будут загружаться здесь -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Сообщения -->
+            <div id="messages" class="tab-content">
+                <h2 class="section-title">Сообщения</h2>
+                <div class="table-container">
+                    <table id="messages-table">
+                        <thead>
+                            <tr>
+                                <th>Имя</th>
+                                <th>Email</th>
+                                <th>Сообщение</th>
+                                <th>Дата</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Сообщения будут загружаться здесь -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Комментарии -->
+            <div id="comments" class="tab-content">
+                <h2 class="section-title">Комментарии</h2>
+                <div class="table-container">
+                    <table id="comments-table">
+                        <thead>
+                            <tr>
+                                <th>Имя</th>
+                                <th>Комментарий</th>
+                                <th>Дата</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Комментарии будут загружаться здесь -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Герой-секция -->
+            <div id="hero" class="tab-content">
+                <h2 class="section-title">Герой-секция</h2>
+                <div class="table-container">
+                    <form id="hero-form">
+                        <div class="form-group">
+                            <label for="hero-name">Имя</label>
+                            <input type="text" id="hero-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="hero-profession">Профессия</label>
+                            <input type="text" id="hero-profession" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="hero-description">Описание</label>
+                            <textarea id="hero-description" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Сохранить изменения</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Навыки -->
+            <div id="skills" class="tab-content">
+                <h2 class="section-title">Навыки</h2>
+                <div class="table-container">
+                    <button id="add-skill" class="btn" style="margin-bottom: 1rem;">Добавить навык</button>
+                    <div id="skills-list">
+                        <!-- Навыки будут загружаться здесь -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Проекты -->
+            <div id="projects" class="tab-content">
+                <h2 class="section-title">Проекты</h2>
+                <div class="table-container">
+                    <button id="add-project" class="btn" style="margin-bottom: 1rem;">Добавить проект</button>
+                    <div id="projects-list">
+                        <!-- Проекты будут загружаться здесь -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Контакты -->
+            <div id="contact" class="tab-content">
+                <h2 class="section-title">Контактная информация</h2>
+                <div class="table-container">
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <label for="contact-email">Email</label>
+                            <input type="email" id="contact-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-phone">Телефон</label>
+                            <input type="text" id="contact-phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-address">Адрес</label>
+                            <input type="text" id="contact-address" required>
+                        </div>
+                        <button type="submit" class="btn">Сохранить изменения</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Соцсети -->
+            <div id="social" class="tab-content">
+                <h2 class="section-title">Социальные сети</h2>
+                <div class="table-container">
+                    <button id="add-social" class="btn" style="margin-bottom: 1rem;">Добавить соцсеть</button>
+                    <div id="social-list">
+                        <!-- Соцсети будут загружаться здесь -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Уведомление о статусе -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // Загрузка данных
+        function loadAdminData() {
+            const siteData = JSON.parse(localStorage.getItem('portfolioSiteData')) || getDefaultSiteData();
+            const messages = JSON.parse(localStorage.getItem('portfolioMessages')) || [];
+            const comments = JSON.parse(localStorage.getItem('portfolioComments')) || [];
+            
+            // Обновляем статистику
+            document.getElementById('messages-count').textContent = messages.length;
+            document.getElementById('comments-count').textContent = comments.length;
+            document.getElementById('unread-count-dash').textContent = messages.filter(m => !m.read).length;
+            document.getElementById('skills-count').textContent = siteData.skills.length;
+            
+            // Обновляем счетчик непрочитанных в меню
+            const unreadCount = messages.filter(m => !m.read).length;
+            const badge = document.getElementById('unread-count');
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount;
+                badge.style.display = 'inline-block';
+                badge.style.background = 'var(--accent)';
+                badge.style.color = 'white';
+                badge.style.borderRadius = '10px';
+                badge.style.padding = '2px 6px';
+                badge.style.fontSize = '0.7rem';
+                badge.style.marginLeft = '5px';
+            } else {
+                badge.style.display = 'none';
+            }
+            
+            // Загружаем последние сообщения
+            loadRecentMessages(messages);
+            
+            // Загружаем последние комментарии
+            loadRecentComments(comments);
+            
+            // Загружаем все сообщения
+            loadAllMessages(messages);
+            
+            // Загружаем все комментарии
+            loadAllComments(comments);
+            
+            // Загружаем данные для редактирования
+            loadHeroData(siteData.hero);
+            loadContactData(siteData.contact);
+            loadSkillsData(siteData.skills);
+            loadProjectsData(siteData.projects);
+            loadSocialData(siteData.social);
+        }
+        
+        function getDefaultSiteData() {
+            return {
+                hero: {
+                    name: 'Алексей',
+                    profession: 'Full-stack разработчик',
+                    description: 'Создаю современные веб-приложения и цифровые решения. Специализируюсь на JavaScript, Python и облачных технологиях.'
+                },
+                contact: {
+                    email: 'alex.dev@example.com',
+                    phone: '+7 (999) 123-45-67',
+                    address: 'Москва, Россия'
+                },
+                skills: [
+                    {
+                        id: 1,
+                        icon: 'fab fa-python',
+                        title: 'Python & Django',
+                        description: 'Разработка бэкенд-приложений, API, веб-скрапинг, анализ данных и машинное обучение. Опыт работы с Django, Flask, FastAPI.'
+                    },
+                    {
+                        id: 2,
+                        icon: 'fab fa-js-square',
+                        title: 'JavaScript & React',
+                        description: 'Создание интерактивных пользовательских интерфейсов. Опыт работы с React, Vue, Node.js и современными инструментами сборки.'
+                    },
+                    {
+                        id: 3,
+                        icon: 'fas fa-database',
+                        title: 'Базы данных',
+                        description: 'Проектирование и оптимизация реляционных и нереляционных БД. Опыт работы с PostgreSQL, MySQL, MongoDB и Redis.'
+                    },
+                    {
+                        id: 4,
+                        icon: 'fas fa-cloud',
+                        title: 'Облачные технологии',
+                        description: 'Развертывание и управление приложениями в облаке. Опыт работы с AWS, Docker, Kubernetes и CI/CD пайплайнами.'
+                    }
+                ],
+                projects: [
+                    {
+                        id: 1,
+                        icon: 'fas fa-chart-line',
+                        title: 'Аналитическая платформа',
+                        description: 'Система для анализа больших объемов данных с интерактивной визуализацией и прогнозированием.',
+                        tags: ['Python', 'Django', 'React', 'D3.js']
+                    },
+                    {
+                        id: 2,
+                        icon: 'fas fa-robot',
+                        title: 'Умный чат-бот',
+                        description: 'AI-помощник для автоматизации поддержки клиентов с интеграцией в популярные мессенджеры.',
+                        tags: ['Python', 'NLP', 'Telegram API', 'TensorFlow']
+                    },
+                    {
+                        id: 3,
+                        icon: 'fas fa-shopping-cart',
+                        title: 'E-commerce платформа',
+                        description: 'Полнофункциональный маркетплейс с системой управления заказами, платежами и аналитикой.',
+                        tags: ['React', 'Node.js', 'MongoDB', 'Stripe API']
+                    }
+                ],
+                social: [
+                    { id: 1, icon: 'fab fa-github', url: '#' },
+                    { id: 2, icon: 'fab fa-linkedin-in', url: '#' },
+                    { id: 3, icon: 'fab fa-telegram', url: '#' },
+                    { id: 4, icon: 'fab fa-twitter', url: '#' }
+                ]
+            };
+        }
+        
+        function loadRecentMessages(messages) {
+            const tbody = document.querySelector('#recent-messages tbody');
+            tbody.innerHTML = '';
+            
+            const recentMessages = messages.slice(0, 5);
+            
+            recentMessages.forEach(message => {
+                const tr = document.createElement('tr');
+                if (!message.read) tr.className = 'message-unread';
+                
+                tr.innerHTML = `
+                    <td>${message.name}</td>
+                    <td>${message.email}</td>
+                    <td>${new Date(message.date).toLocaleDateString('ru-RU')}</td>
+                    <td>
+                        <button class="btn view-message" data-id="${message.id}">Просмотр</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            
+            // Добавляем обработчики событий для кнопок просмотра
+            document.querySelectorAll('.view-message').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const messageId = parseInt(this.getAttribute('data-id'));
+                    viewMessage(messageId);
+                });
+            });
+        }
+        
+        function loadRecentComments(comments) {
+            const tbody = document.querySelector('#recent-comments tbody');
+            tbody.innerHTML = '';
+            
+            const recentComments = comments.slice(0, 5);
+            
+            recentComments.forEach(comment => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${comment.name}</td>
+                    <td>${comment.text.length > 50 ? comment.text.substring(0, 50) + '...' : comment.text}</td>
+                    <td>${new Date(comment.date).toLocaleDateString('ru-RU')}</td>
+                    <td>
+                        <button class="btn btn-danger delete-comment" data-id="${comment.id}">Удалить</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            
+            // Добавляем обработчики событий для кнопок удаления
+            document.querySelectorAll('.delete-comment').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const commentId = parseInt(this.getAttribute('data-id'));
+                    deleteComment(commentId);
+                });
+            });
+        }
+        
+        function loadAllMessages(messages) {
+            const tbody = document.querySelector('#messages-table tbody');
+            tbody.innerHTML = '';
+            
+            messages.forEach(message => {
+                const tr = document.createElement('tr');
+                if (!message.read) tr.className = 'message-unread';
+                
+                tr.innerHTML = `
+                    <td>${message.name}</td>
+                    <td>${message.email}</td>
+                    <td>${message.message.length > 50 ? message.message.substring(0, 50) + '...' : message.message}</td>
+                    <td>${new Date(message.date).toLocaleDateString('ru-RU')}</td>
+                    <td>
+                        <button class="btn view-message" data-id="${message.id}">Просмотр</button>
+                        <button class="btn btn-danger delete-message" data-id="${message.id}">Удалить</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            
+            // Добавляем обработчики событий для кнопок
+            document.querySelectorAll('.view-message').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const messageId = parseInt(this.getAttribute('data-id'));
+                    viewMessage(messageId);
+                });
+            });
+            
+            document.querySelectorAll('.delete-message').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const messageId = parseInt(this.getAttribute('data-id'));
+                    deleteMessage(messageId);
+                });
+            });
+        }
+        
+        function loadAllComments(comments) {
+            const tbody = document.querySelector('#comments-table tbody');
+            tbody.innerHTML = '';
+            
+            comments.forEach(comment => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${comment.name}</td>
+                    <td>${comment.text.length > 50 ? comment.text.substring(0, 50) + '...' : comment.text}</td>
+                    <td>${new Date(comment.date).toLocaleDateString('ru-RU')}</td>
+                    <td>
+                        <button class="btn btn-danger delete-comment" data-id="${comment.id}">Удалить</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            
+            // Добавляем обработчики событий для кнопок удаления
+            document.querySelectorAll('.delete-comment').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const commentId = parseInt(this.getAttribute('data-id'));
+                    deleteComment(commentId);
+                });
+            });
+        }
+        
+        function loadHeroData(hero) {
+            document.getElementById('hero-name').value = hero.name;
+            document.getElementById('hero-profession').value = hero.profession;
+            document.getElementById('hero-description').value = hero.description;
+        }
+        
+        function loadContactData(contact) {
+            document.getElementById('contact-email').value = contact.email;
+            document.getElementById('contact-phone').value = contact.phone;
+            document.getElementById('contact-address').value = contact.address;
+        }
+        
+        function loadSkillsData(skills) {
+            const container = document.getElementById('skills-list');
+            container.innerHTML = '';
+            
+            skills.forEach(skill => {
+                const skillItem = document.createElement('div');
+                skillItem.className = 'skill-item';
+                skillItem.innerHTML = `
+                    <div class="item-header">
+                        <h3>${skill.title}</h3>
+                        <div class="item-actions">
+                            <button class="btn edit-skill" data-id="${skill.id}">Редактировать</button>
+                            <button class="btn btn-danger delete-skill" data-id="${skill.id}">Удалить</button>
+                        </div>
+                    </div>
+                    <p><strong>Иконка:</strong> ${skill.icon}</p>
+                    <p>${skill.description}</p>
+                `;
+                container.appendChild(skillItem);
+            });
+            
+            // Добавляем обработчики событий
+            document.querySelectorAll('.edit-skill').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const skillId = parseInt(this.getAttribute('data-id'));
+                    editSkill(skillId);
+                });
+            });
+            
+            document.querySelectorAll('.delete-skill').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const skillId = parseInt(this.getAttribute('data-id'));
+                    deleteSkill(skillId);
+                });
+            });
+        }
+        
+        function loadProjectsData(projects) {
+            const container = document.getElementById('projects-list');
+            container.innerHTML = '';
+            
+            projects.forEach(project => {
+                const projectItem = document.createElement('div');
+                projectItem.className = 'project-item';
+                projectItem.innerHTML = `
+                    <div class="item-header">
+                        <h3>${project.title}</h3>
+                        <div class="item-actions">
+                            <button class="btn edit-project" data-id="${project.id}">Редактировать</button>
+                            <button class="btn btn-danger delete-project" data-id="${project.id}">Удалить</button>
+                        </div>
+                    </div>
+                    <p><strong>Иконка:</strong> ${project.icon}</p>
+                    <p>${project.description}</p>
+                    <p><strong>Теги:</strong> ${project.tags.join(', ')}</p>
+                `;
+                container.appendChild(projectItem);
+            });
+            
+            // Добавляем обработчики событий
+            document.querySelectorAll('.edit-project').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const projectId = parseInt(this.getAttribute('data-id'));
+                    editProject(projectId);
+                });
+            });
+            
+            document.querySelectorAll('.delete-project').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const projectId = parseInt(this.getAttribute('data-id'));
+                    deleteProject(projectId);
+                });
+            });
+        }
+        
+        function loadSocialData(social) {
+            const container = document.getElementById('social-list');
+            container.innerHTML = '';
+            
+            social.forEach(item => {
+                const socialItem = document.createElement('div');
+                socialItem.className = 'skill-item';
+                socialItem.innerHTML = `
+                    <div class="item-header">
+                        <h3><i class="${item.icon}"></i> ${item.icon.split('-')[1]}</h3>
+                        <div class="item-actions">
+                            <button class="btn edit-social" data-id="${item.id}">Редактировать</button>
+                            <button class="btn btn-danger delete-social" data-id="${item.id}">Удалить</button>
+                        </div>
+                    </div>
+                    <p><strong>URL:</strong> ${item.url}</p>
+                `;
+                container.appendChild(socialItem);
+            });
+            
+            // Добавляем обработчики событий
+            document.querySelectorAll('.edit-social').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const socialId = parseInt(this.getAttribute('data-id'));
+                    editSocial(socialId);
+                });
+            });
+            
+            document.querySelectorAll('.delete-social').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const socialId = parseInt(this.getAttribute('data-id'));
+                    deleteSocial(socialId);
+                });
+            });
+        }
+        
+        function viewMessage(messageId) {
+            const messages = JSON.parse(localStorage.getItem('portfolioMessages')) || [];
+            const message = messages.find(m => m.id === messageId);
+            
+            if (message) {
+                // Помечаем как прочитанное
+                message.read = true;
+                localStorage.setItem('portfolioMessages', JSON.stringify(messages));
+                
+                // Показываем содержимое сообщения
+                alert(`Сообщение от: ${message.name}\nEmail: ${message.email}\nДата: ${new Date(message.date).toLocaleString('ru-RU')}\n\nСообщение:\n${message.message}`);
+                
+                // Обновляем данные
+                loadAdminData();
+            }
+        }
+        
+        function deleteMessage(messageId) {
+            if (confirm('Вы уверены, что хотите удалить это сообщение?')) {
+                let messages = JSON.parse(localStorage.getItem('portfolioMessages')) || [];
+                messages = messages.filter(m => m.id !== messageId);
+                localStorage.setItem('portfolioMessages', JSON.stringify(messages));
+                loadAdminData();
+                showNotification('Сообщение удалено', 'success');
+            }
+        }
+        
+        function deleteComment(commentId) {
+            if (confirm('Вы уверены, что хотите удалить этот комментарий?')) {
+                let comments = JSON.parse(localStorage.getItem('portfolioComments')) || [];
+                comments = comments.filter(c => c.id !== commentId);
+                localStorage.setItem('portfolioComments', JSON.stringify(comments));
+                loadAdminData();
+                showNotification('Комментарий удален', 'success');
+            }
+        }
+        
+        function deleteSkill(skillId) {
+            if (confirm('Вы уверены, что хотите удалить этот навык?')) {
+                const siteData = JSON.parse(localStorage.getItem('portfolioSiteData'));
+                siteData.skills = siteData.skills.filter(s => s.id !== skillId);
+                localStorage.setItem('portfolioSiteData', JSON.stringify(siteData));
+                loadAdminData();
+                showNotification('Навык удален', 'success');
+            }
+        }
+        
+        function deleteProject(projectId) {
+            if (confirm('Вы уверены, что хотите удалить этот проект?')) {
+                const siteData = JSON.parse(localStorage.getItem('portfolioSiteData'));
+                siteData.projects = siteData.projects.filter(p => p.id !== projectId);
+                localStorage.setItem('portfolioSiteData', JSON.stringify(siteData));
+                loadAdminData();
+                showNotification('Проект удален', 'success');
+            }
+        }
+        
+        function deleteSocial(socialId) {
+            if (confirm('Вы уверены, что хотите удалить эту социальную сеть?')) {
+                const siteData = JSON.parse(localStorage.getItem('portfolioSiteData'));
+                siteData.social = siteData.social.filter(s => s.id !== socialId);
+                localStorage.setItem('portfolioSiteData', JSON.stringify(siteData));
+                loadAdminData();
+                showNotification('Социальная сеть удалена', 'success');
+            }
+        }
+        
+        function editSkill(skillId) {
+            const siteData = JSON.parse(localStorage.getItem('portfolioSiteData'));
+            const skill = siteData.skills.find(s => s.id === skillId);
+            
+            if (skill) {
+                const newTitle = prompt('Новое название навыка:', skill.title);
+                if (newTitle !== null) {
+                    const newIcon = prompt('Новая иконка (FontAwesome класс):', skill.icon);
+                    if (newIcon !== null) {
+                        const newDescription = prompt('Новое описание:', skill.description);
+                        if (newDescription !== null) {
+                            skill.title = newTitle;
+                            skill.icon = newIcon;
+                            skill.description = newDescription;
+                            
+                            localStorage.setItem('portfolioSiteData', JSON.stringify(siteData));
+                            loadAdminData();
+                            showNotification('Навык обновлен', 'success');
+                        }
+                    }
+                }
+            }
+        }
+        
+        function editProject(projectId) {
+            const siteData = JSON.parse(localStorage.getItem('portfolioSiteData'));
+            const project = siteData.projects.find(p => p.id === projectId);
+            
+            if (project) {
+                const newTitle = prompt('Новое название проекта:', project.title);
+                if (newTitle !== null) {
+                    const newIcon = prompt('Новая иконка (FontAwesome класс):', project.icon);
+                    if (newIcon !== null) {
+                        const newDescription = prompt('Новое описание:', project.description);
+                        if (newDescription !== null) {
+                            const newTags = prompt('Новые теги (через запятую):', project.tags.join(', '));
+                            if (newTags !== null) {
+                                project.title = newTitle;
+                                project.icon = newIcon;
+                                project.description = newDescription;
+                                project.tags = newTags.split(',').map(tag => tag.trim());
+                                
+                                localStorage.setItem('portfolioSiteData', JSON.stringify(siteData));
+                                loadAdminData();
+                                showNotification('Проект обновлен', 'success');
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        function editSocial(socialId) {
+            const siteData = JSON.parse(localStorage.getItem('portfolioSiteData'));
+            const social = siteData.social.find(s => s.id === socialId);
+            
+            if (social) {
+                const newIcon = prompt('Новая иконка (FontAwesome класс):', social.icon);
+                if (newIcon !== null) {
+                    const newUrl = prompt('Новый URL:', social.url);
+                    if (newUrl !== null) {
+                        social.icon = newIcon;
+                        social.url = newUrl;
+                        
+                        localStorage.setItem('portfolioSiteData', JSON.stringify(siteData));
+                        loadAdminData();
+                        showNotification('Социальная сеть обновлена', 'success');
+                    }
+                }
+            }
+        }
+        
+        // Обработчики форм
+        document.getElementById('hero-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const siteData = JSON.parse(localStorage.getItem('portfolioSiteData'));
+            siteData.hero.name = document.getElementById('hero-name').value;
+            siteData.hero.profession = document.getElementById('hero-profession').value;
+            siteData.hero.description = document.getElementById('hero-description').value;
+            
+            localStorage.setItem('portfolioSiteData', JSON.stringify(siteData));
+            showNotification('Герой-секция обновлена', 'success');
+        });
+        
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const siteData = JSON.parse(localStorage.getItem('portfolioSiteData'));
+            siteData.contact.email = document.getElementById('contact-email').value;
+            siteData.contact.phone = document.getElementById('contact-phone').value;
+            siteData.contact.address = document.getElementById('contact-address').value;
+            
+            localStorage.setItem('portfolioSiteData', JSON.stringify(siteData));
+            showNotification('Контактная информация обновлена', 'success');
+        });
+        
+        // Добавление новых элементов
+        document.getElementById('add-skill').addEventListener('click', function() {
+            const siteData = JSON.parse(localStorage.getItem('portfolioSiteData'));
+            const newId = Math.max(...siteData.skills.map(s => s.id), 0) + 1;
+            
+            const title = prompt('Название навыка:');
+            if (title) {
+                const icon = prompt('Иконка (FontAwesome класс):', 'fas fa-code');
+                if (icon) {
+                    const description = prompt('Описание:');
+                    if (description) {
+                        siteData.skills.push({
+                            id: newId,
+                            icon: icon,
+                            title: title,
+                            description: description
+                        });
+                        
+                        localStorage.setItem('portfolioSiteData', JSON.stringify(siteData));
+                        loadAdminData();
+                        showNotification('Навык добавлен', 'success');
+                    }
+                }
+            }
+        });
+        
+        document.getElementById('add-project').addEventListener('click', function() {
+            const siteData = JSON.parse(localStorage.getItem('portfolioSiteData'));
+            const newId = Math.max(...siteData.projects.map(p => p.id), 0) + 1;
+            
+            const title = prompt('Название проекта:');
+            if (title) {
+                const icon = prompt('Иконка (FontAwesome класс):', 'fas fa-project-diagram');
+                if (icon) {
+                    const description = prompt('Описание:');
+                    if (description) {
+                        const tags = prompt('Теги (через запятую):');
+                        if (tags) {
+                            siteData.projects.push({
+                                id: newId,
+                                icon: icon,
+                                title: title,
+                                description: description,
+                                tags: tags.split(',').map(tag => tag.trim())
+                            });
+                            
+                            localStorage.setItem('portfolioSiteData', JSON.stringify(siteData));
+                            loadAdminData();
+                            showNotification('Проект добавлен', 'success');
+                        }
+                    }
+                }
+            }
+        });
+        
+        document.getElementById('add-social').addEventListener('click', function() {
+            const siteData = JSON.parse(localStorage.getItem('portfolioSiteData'));
+            const newId = Math.max(...siteData.social.map(s => s.id), 0) + 1;
+            
+            const icon = prompt('Иконка (FontAwesome класс):', 'fab fa-example');
+            if (icon) {
+                const url = prompt('URL:');
+                if (url) {
+                    siteData.social.push({
+                        id: newId,
+                        icon: icon,
+                        url: url
+                    });
+                    
+                    localStorage.setItem('portfolioSiteData', JSON.stringify(siteData));
+                    loadAdminData();
+                    showNotification('Социальная сеть добавлена', 'success');
+                }
+            }
+        });
+        
+        // Функция показа уведомлений
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification ' + type;
+            
+            setTimeout(() => {
+                notification.className = 'notification';
+            }, 3000);
+        }
+        
+        // Переключение между вкладками
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Убираем активный класс у всех ссылок
+                document.querySelectorAll('.sidebar a').forEach(a => {
+                    a.classList.remove('active');
+                });
+                
+                // Добавляем активный класс к текущей ссылке
+                this.classList.add('active');
+                
+                // Скрываем все вкладки
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                
+                // Показываем выбранную вкладку
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAdminData();
+        });
+    </script>
+</body>
+</html>
